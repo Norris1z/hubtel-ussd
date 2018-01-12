@@ -1,6 +1,6 @@
 {
   "name": "hubtel-ussd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An unofficial nodejs wrapper for processing hubtel ussd requests",
   "main": "index.js",
   "scripts": {
