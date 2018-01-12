@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const app = express();
 
 const _ = require('underscore');
+
+const cors = require('cors');
+
 /**
  * Require hubtel-ussd
  */
@@ -12,6 +15,7 @@ const Hubtel = require('hubtel-ussd');
 const HubtelUSSD = new Hubtel();
 const HubtelRequest = Hubtel.Request;
 
+app.use(cors());
 app.use(bodyParser.json());
 
 

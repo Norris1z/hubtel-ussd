@@ -27,6 +27,11 @@ const Hubtel = require('hubtel-ussd');
 const HubtelUSSD = new Hubtel();
 const HubtelRequest = Hubtel.Request;
 
+//setup CORS
+const cors = require('cors');
+
+app.use(cors());
+
 //route which serves as the endpoint to your ussd application
 app.post('/', (req, res) => {
   // we use underscorejs to convert the request body to an array and use the spread operator
