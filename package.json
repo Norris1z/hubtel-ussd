@@ -3,9 +3,7 @@
   "version": "1.0.1",
   "description": "An unofficial nodejs wrapper for processing hubtel ussd requests",
   "main": "index.js",
-  "scripts": {
-    
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Norris1z/hubtel-ussd.git"
