@@ -19,7 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
-app.post('/', (req, res) => {
+app.post('/',async(req, res) => {
 
     /**
      *  We convert the body of the request to an array using underscore (_(object).toArray())
@@ -28,7 +28,7 @@ app.post('/', (req, res) => {
      * */
     let request = new HubtelRequest(... _(req.body).toArray());
 
-    let ussdResponse = HubtelUSSD.process(request,[
+    let ussdResponse = await HubtelUSSD.process(request,[
         require('./ussd_sequence/sequence1'),
         require('./ussd_sequence/sequence2'),
         require('./ussd_sequence/sequence3')
