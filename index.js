@@ -118,7 +118,7 @@ class HubtelUSSDResponse{
 }
 
 class HubtelUSSD{
-    process(HubtelRequest,Sequences){
+    async process(HubtelRequest,Sequences){
          if(! HubtelRequest instanceof HubtelUSSDRequest) throw new Error("First parameter passed to HubtelUSSD.process must be an instance of HubtelUSSDRequest");
          if(!Array.isArray(Sequences)) throw new Error("HubtelUSSD.process requires second parameter to be array");
          if(Sequences.length === 0) throw new Error("Second parameter passed to HubtelUSSD.process cannot be empty");
@@ -127,7 +127,7 @@ class HubtelUSSD{
          if(Sequences[sequence] === undefined) return new HubtelUSSDResponse('Sorry!. Something went wrong',ResponseTypes.release);
          let newInstance = new Sequences[sequence];
          if(newInstance.handle === undefined) throw new Error(`All Sequences passed to Hubtel.process must have a 'handle' method. Check Sequence '${newInstance.constructor.name}'`);
-         let response = newInstance.handle(HubtelRequest);
+         let response = await newInstance.handle(HubtelRequest);
          if(!(response instanceof HubtelUSSDResponse)) throw new Error("All Sequences must return an Instance of HubtelUSSDResponse");
          
          return response;

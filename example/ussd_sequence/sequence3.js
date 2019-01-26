@@ -3,7 +3,7 @@ const Response = hubtel.Response;
 const ResponseTypes =hubtel.ResponseTypes;
 
 class Sequence3{
-    handle(ussdRequest){
+    async handle(ussdRequest){
         let ussdResponse = new Response();
         switch (ussdRequest.message) {
             case '1':

@@ -3,7 +3,7 @@ const Response = hubtel.Response;
 const ResponseTypes =hubtel.ResponseTypes;
 
 class Sequence2{
-    handle(ussdRequest){
+    async handle(ussdRequest){
         let ussdResponse = new Response();
         const items = { 1: 'food', 2: 'drink', 3: 'airtime' };
 
