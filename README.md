@@ -1,6 +1,6 @@
 # Hubtel USSD
 
-Based on [Hubtel's USSD API](https://developers.hubtel.com/documentations/ussd)
+Based on [Hubtel's USSD API](https://developers.hubtel.com/reference#ussd)
 
 ## About
 
@@ -8,7 +8,7 @@ This package helps you to build maintainable and scalable USSD applications by b
 
 ## Getting Started
 
-Check out [this link](https://developers.hubtel.com/documentations/ussd#how-to-get-ussd-short-code) to know how you can acquire a USSD code from Hubtel.
+Check out [this link](https://developers.hubtel.com/docs/getting-started-with-ussd) to know how you can acquire a USSD code from Hubtel.
 
 ### Installing
 
@@ -33,7 +33,7 @@ const cors = require('cors');
 app.use(cors());
 
 //route which serves as the endpoint to your ussd application
-app.post('/', (req, res) => {
+app.post('/', async(req, res) => {
   // we use underscorejs to convert the request body to an array and use the spread operator
   let request = new HubtelRequest(... _(req.body).toArray());
   
@@ -42,7 +42,7 @@ app.post('/', (req, res) => {
     * create a folder for our sequences
     * and require the seqeunces into an array as the second parameter for HubtelUSSD.process
     **/
-    let ussdResponse = HubtelUSSD.process(request,[
+    let ussdResponse = await HubtelUSSD.process(request,[
         require('./my_sequence_dir/sequence1'),
         require('./my_sequence_dir/sequence2'),
         require('./my_sequence_dir/sequence3')
@@ -74,7 +74,7 @@ an `array` of `sequence`;
   const HubtelRequest = Hubtel.Request;
   
   let request = new HubtelRequest(/** populate properties **/);
-  let response = HubtelUSSD.process(request,[/** an array of sequence **/);
+  let response = await HubtelUSSD.process(request,[/** an array of sequence **/);
   //response is an instance of HubtelUSSDResponse
   
 ```
@@ -94,7 +94,7 @@ class Sequence1{
      * A ussdRequest object which is an instance of HubtelUSSDRequest
      *  this gives us access to methods such as {mobile,sessionId,serviceCode,type} etc 
      **/
-    handle(ussdRequest){
+    async handle(ussdRequest){
         //ussdRequest.mobile --- returns the mobile number of the user performing the request. etc
         return new Response('Welcome to Freebie Service.\n1. Free Food\n2. Free Drink\n3. Free Airtime',ResponseTypes.response);
     }

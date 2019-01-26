@@ -1,11 +1,13 @@
 let chai = require('chai');
-let should = chai.should();
+let chaiAsPromised = require("chai-as-promised");
+let expect = chai.expect
 let assert = chai.assert;
 let hubtel = require('../index');
 let Request = hubtel.Request;
 let Response = hubtel.Response;
 let ResponseTypes = hubtel.ResponseTypes;
 
+chai.use(chaiAsPromised);
 
 describe("HubtelUSSD tests",function(){
     let HubtelUSSD;
@@ -16,22 +18,22 @@ describe("HubtelUSSD tests",function(){
     });
 
     it("Throws an error when the first parameter passed to process is not an instance of HubtelUSSDRequest",function(){
-        should.throw(()=>{HubtelUSSD.process({},[])});
-        should.not.throw(()=>{HubtelUSSD.process(HubtelRequest,[""])});
+        expect(HubtelUSSD.process({}, [])).to.be.rejected;
+        expect( HubtelUSSD.process(HubtelRequest, [""])).to.be.fulfilled;
     });
     
     it("Throws an error when second parameter to process is not an array",function(){
-        should.throw(()=>{HubtelUSSD.process(HubtelRequest,"i am causing an error")});
-        should.not.throw(()=>{HubtelUSSD.process(HubtelRequest,[""])});
+        expect(HubtelUSSD.process(HubtelRequest, "i am causing an error")).to.be.rejected;
+        expect(HubtelUSSD.process(HubtelRequest, [""])).to.be.fulfilled
     });
     
     it("Throws an error when second parameter passed to process is an empty array",function(){
-        should.throw(()=>{HubtelUSSD.process(HubtelRequest,[])});
-        should.not.throw(()=>{HubtelUSSD.process(HubtelRequest,[""])});
+        expect(HubtelUSSD.process(HubtelRequest, [])).to.be.rejected;
+        expect(HubtelUSSD.process(HubtelRequest, [""])).to.be.fulfilled;
     });
     
-    it("Returns a HubtelUSSDResponse when the sequence is invalid",function(){
-        let response = HubtelUSSD.process(HubtelRequest,["i am an invalid sequence"]);
+    it("Returns a HubtelUSSDResponse when the sequence is invalid",async function(){
+        let response = await HubtelUSSD.process(HubtelRequest,["i am an invalid sequence"]);
         assert.strictEqual(true,response instanceof Response);
         assert.equal(response.message,'Sorry!. Something went wrong');
         assert.equal(response.type,ResponseTypes.release);
@@ -49,14 +51,14 @@ describe("HubtelUSSD tests",function(){
                 return "Hello Joshua";
             }
         };
-        should.throw(()=>{HubtelUSSD.process(ConstructedHubtelRequest,[mySequence])});
+        expect(HubtelUSSD.process(ConstructedHubtelRequest, [mySequence])).to.be.rejected;
 
         let myGoodSequence =class{
             handle(ussdRequest){
                 return new Response("Hello JabClari",ResponseTypes.release);
             }
         }
-        should.not.throw(()=>{HubtelUSSD.process(ConstructedHubtelRequest,[myGoodSequence])});
+        expect(HubtelUSSD.process(ConstructedHubtelRequest, [myGoodSequence])).to.be.fulfilled;
     });
 
     it("Throws an error if the response from the call to process is not an instance of HubtelUSSDResponse",function(){
@@ -67,16 +69,16 @@ describe("HubtelUSSD tests",function(){
                 return {message:"Hello JabClari",type:ResponseTypes.release};
             }
         }
-        should.throw(()=>{HubtelUSSD.process(ConstructedHubtelRequest,[Initial])});
+        expect(HubtelUSSD.process(ConstructedHubtelRequest, [Initial])).to.be.rejected;;
         let Second = class{
             handle(ussdRequest){
                 return new Response("Hello JabClari",ResponseTypes.release);
             }
         }
-        should.not.throw(()=>{HubtelUSSD.process(ConstructedHubtelRequest,[Second])});
+        expect(HubtelUSSD.process(ConstructedHubtelRequest, [Second])).to.be.fulfilled;;
     });
 
-    it("Returns a response",function(){
+    it("Returns a response",async function(){
         let ConstructedHubtelRequest = new Request("2331234567","8883ba8b1e7348b8b566b4b3396575c2",
         "712","Initiation","1","mtn","1","hello Norris"); 
         let sequence = class{
@@ -84,7 +86,7 @@ describe("HubtelUSSD tests",function(){
                 return new Response("Hello JabClari",ResponseTypes.release);
             }
         }
-        let response = HubtelUSSD.process(ConstructedHubtelRequest,[sequence]);
+        let response = await HubtelUSSD.process(ConstructedHubtelRequest,[sequence]);
         assert.equal(response.message,'Hello JabClari');
         assert.equal(response.type,ResponseTypes.release);
         assert.equal(response.clientState,null);
